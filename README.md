@@ -9,5 +9,5 @@
 ## 3.根据service group name标签获取本服务组mysql容器ip和port，并且写入proxysql本地admin interface中
 ```unitctl sync server ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --service-type mysql-replication --rw-hostgroup 10 --ro-hostgroup 20```
 
-## 4.根据service group name
+## 4.根据service group name标签获取本服务组mysql容器ip和port，并且连接到指定master mysql节点中 获取所有Host为本proxysql容器ip地址的用户 并写入proxysql本地admin interface中
 ```unitctl sync user ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --default-hostgroup 10 --max-connection 10000 --sync-username check --sync-password 123456```
