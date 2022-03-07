@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/upmio/unitctl/apps/unit/impl"
+	"go.uber.org/zap"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -23,18 +25,25 @@ var configMapCmd = &cobra.Command{
 			return fmt.Errorf("can only accept one configmap name as arg")
 		}
 
-		ctx := context.Background()
+		var (
+			logger, _   = zap.NewDevelopment()
+			slogger     = logger.Sugar()
+			ctx, cancel = context.WithTimeout(context.Background(), time.Second*5)
+		)
+		defer cancel()
 
-		unitClient, err := impl.NewUnit()
+		unitClient, err := impl.NewUnit(slogger)
 		if err != nil {
 			return err
 		}
 
+		// 获取指定configmap 内容
 		data, err := unitClient.GetConfigmap(ctx, namespace, args[0])
 		if err != nil {
 			return err
 		}
 
+		// 将configmap内容落到文件中
 		return data.CreateConfig(fileDir)
 	},
 }

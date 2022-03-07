@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/upmio/unitctl/apps/unit/impl"
+	"go.uber.org/zap"
+	"time"
 )
 
 var (
@@ -22,9 +24,14 @@ var secretCmd = &cobra.Command{
 			return fmt.Errorf("can only accept one secret name as arg")
 		}
 
-		ctx := context.Background()
+		var (
+			logger, _   = zap.NewDevelopment()
+			slogger     = logger.Sugar()
+			ctx, cancel = context.WithTimeout(context.Background(), time.Second*5)
+		)
+		defer cancel()
 
-		unitClient, err := impl.NewUnit()
+		unitClient, err := impl.NewUnit(slogger)
 		if err != nil {
 			return err
 		}

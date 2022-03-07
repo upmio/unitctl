@@ -4,15 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/upmio/unitctl/apps/mysql"
+	"go.uber.org/zap"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type impl struct {
-	db *sql.DB
+	db     *sql.DB
+	logger *zap.SugaredLogger
 }
 
-func NewMysqlClient(username, password, host, database string, port int) (mysql.UserClient, error) {
+func NewMysqlClient(username, password, host, database string, port int, logger *zap.SugaredLogger) (mysql.UserClient, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", username, password, host, port, database)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -25,7 +27,8 @@ func NewMysqlClient(username, password, host, database string, port int) (mysql.
 	}
 
 	return &impl{
-		db: db,
+		db:     db,
+		logger: logger,
 	}, nil
 }
 
@@ -55,6 +58,7 @@ func (i *impl) GetMysqlUser(hostIp string) (mysql.UserSet, error) {
 		if err != nil {
 			return nil, fmt.Errorf("scan user fail, err: %v", err)
 		}
+		i.logger.Infof("get user %s", user.Username)
 		userList = append(userList, user)
 	}
 

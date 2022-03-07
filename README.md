@@ -10,4 +10,4 @@
 ```unitctl sync server ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --service-type mysql-replication --rw-hostgroup 10 --ro-hostgroup 20```
 
 ## 4.根据service group name
-```unitctl sync user ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --default-hostgrou 10 --max-connection 10000 --sync-username check --sync-password 123456```
+```unitctl sync user ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --default-hostgroup 10 --max-connection 10000 --sync-username check --sync-password 123456```

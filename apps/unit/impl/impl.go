@@ -3,6 +3,7 @@ package impl
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
@@ -13,9 +14,10 @@ import (
 
 type impl struct {
 	kubeclientset kubernetes.Interface
+	logger        *zap.SugaredLogger
 }
 
-func NewUnit() (unit.UnitClient, error) {
+func NewUnit(logger *zap.SugaredLogger) (unit.UnitClient, error) {
 	// create incluster config object
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -30,6 +32,7 @@ func NewUnit() (unit.UnitClient, error) {
 
 	return &impl{
 		kubeclientset: clientset,
+		logger:        logger,
 	}, nil
 }
 
@@ -76,6 +79,7 @@ func (i *impl) GetMysqlSet(ctx context.Context, namespace, svcGroupName string) 
 					podPort := int(container.Ports[0].ContainerPort)
 					var mysql = unit.NewMysql(podIp, podPort)
 					mysqlSet = append(mysqlSet, mysql)
+					i.logger.Infof("get master server %s:%d", mysql.IpAddr, mysql.Port)
 				}
 			}
 		}
