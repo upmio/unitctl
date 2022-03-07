@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"fmt"
+	"github.com/upmio/unitctl/apps/unit/impl"
 
 	"github.com/spf13/cobra"
 )
@@ -23,6 +24,11 @@ var configMapCmd = &cobra.Command{
 		}
 
 		ctx := context.Background()
+
+		unitClient, err := impl.NewUnit()
+		if err != nil {
+			return err
+		}
 
 		data, err := unitClient.GetConfigmap(ctx, namespace, args[0])
 		if err != nil {

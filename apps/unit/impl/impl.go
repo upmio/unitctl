@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
@@ -14,7 +15,7 @@ type impl struct {
 	kubeclientset kubernetes.Interface
 }
 
-func NewUnitImpl() (unit.UnitClient, error) {
+func NewUnit() (unit.UnitClient, error) {
 	// create incluster config object
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -47,4 +48,42 @@ func (i *impl) GetConfigmap(ctx context.Context, namespace, configMapName string
 		return nil, err
 	}
 	return configMap.Data, nil
+}
+
+func (i *impl) GetMysqlSet(ctx context.Context, namespace, svcGroupName string) (unit.MysqlSet, error) {
+	podList, err := i.kubeclientset.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{
+		LabelSelector: labels.Set{
+			unit.SvcGroupNameLabel: svcGroupName,
+			unit.SvcTypeLabel:      "mysql",
+		}.String(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(podList.Items) == 0 {
+		return nil, fmt.Errorf("get mysql pod list zero")
+	}
+
+	var mysqlSet = make(unit.MysqlSet, 0)
+
+	for _, pod := range podList.Items {
+		if pod.Labels[unit.ReadOnlyLabel] == "false" {
+			podIp := pod.Status.PodIP
+			for _, container := range pod.Spec.Containers {
+				if container.Name == "mysql" {
+					podPort := int(container.Ports[0].ContainerPort)
+					var mysql = unit.NewMysql(podIp, podPort)
+					mysqlSet = append(mysqlSet, mysql)
+				}
+			}
+		}
+	}
+
+	if len(mysqlSet) > 1 {
+		return nil, fmt.Errorf("get readonly label false pod result count more than 1")
+	}
+
+	return mysqlSet, nil
 }

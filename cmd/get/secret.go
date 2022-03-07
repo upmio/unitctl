@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/upmio/unitctl/apps/unit/impl"
 )
 
 var (
@@ -22,6 +23,11 @@ var secretCmd = &cobra.Command{
 		}
 
 		ctx := context.Background()
+
+		unitClient, err := impl.NewUnit()
+		if err != nil {
+			return err
+		}
 
 		data, err := unitClient.GetSecret(ctx, namespace, args[0])
 		if err != nil {

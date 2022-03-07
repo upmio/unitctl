@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/upmio/unitctl/cmd/get"
+	"github.com/upmio/unitctl/cmd/sync"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -43,4 +44,5 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&helpFlag, "help", "", false, "Help default flag")
 	RootCmd.PersistentFlags().BoolVarP(&vers, "version", "v", false, "the proxysql-initializer version")
 	RootCmd.AddCommand(get.GetCmd)
+	RootCmd.AddCommand(sync.SyncCmd)
 }

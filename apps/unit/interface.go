@@ -7,9 +7,16 @@ import (
 	"path"
 )
 
+const (
+	ReadOnlyLabel     = "dbscale.proxysql.readonly"
+	SvcGroupNameLabel = "dbscale.service.group"
+	SvcTypeLabel      = "dbscale.service.image.name"
+)
+
 type UnitClient interface {
 	GetSecret(ctx context.Context, namespace string, secretName string) (SecretInfo, error)
 	GetConfigmap(ctx context.Context, namespace, configMapName string) (ConfigMapInfo, error)
+	GetMysqlSet(ctx context.Context, namespace, svcGroupName string) (MysqlSet, error)
 }
 
 type SecretInfo map[string][]byte
@@ -35,3 +42,17 @@ func (c ConfigMapInfo) CreateConfig(fileDir string) error {
 	}
 	return nil
 }
+
+type Mysql struct {
+	IpAddr string
+	Port   int
+}
+
+func NewMysql(ip string, port int) *Mysql {
+	return &Mysql{
+		IpAddr: ip,
+		Port:   port,
+	}
+}
+
+type MysqlSet []*Mysql

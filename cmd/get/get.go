@@ -3,14 +3,10 @@ package get
 import (
 	"errors"
 	"github.com/spf13/cobra"
-	"github.com/upmio/unitctl/apps/unit"
-	"github.com/upmio/unitctl/apps/unit/impl"
 )
 
 var (
-	namespace  string
-	unitClient unit.UnitClient
-	err        error
+	namespace string
 )
 
 var GetCmd = &cobra.Command{
@@ -23,10 +19,6 @@ var GetCmd = &cobra.Command{
 }
 
 func init() {
-	unitClient, err = impl.NewUnitImpl()
-	if err != nil {
-		panic(err)
-	}
 	GetCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "default", "specify namespace")
 	GetCmd.AddCommand(secretCmd)
 	GetCmd.AddCommand(configMapCmd)
