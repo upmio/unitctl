@@ -54,7 +54,7 @@ func (i *impl) GetMysqlUser(hostIp string) (mysql.UserSet, error) {
 
 	for rows.Next() {
 		user := mysql.NewDefaultUser()
-		err := rows.Scan(&user.Username, &user.Username)
+		err := rows.Scan(&user.Username, &user.Password)
 		if err != nil {
 			return nil, fmt.Errorf("scan user fail, err: %v", err)
 		}

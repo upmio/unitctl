@@ -1,5 +1,5 @@
 package impl
 
 const (
-	getUserSql = `SELECT mysql,authentication_string FROM mysql WHERE host = ? ;`
+	getUserSql = `SELECT User,authentication_string FROM mysql.user WHERE host = ? ;`
 )

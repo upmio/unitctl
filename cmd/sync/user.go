@@ -82,6 +82,6 @@ var userCmd = &cobra.Command{
 func init() {
 	userCmd.PersistentFlags().StringVarP(&syncUser, "sync-username", "", "root", "sync username")
 	userCmd.PersistentFlags().StringVarP(&syncPass, "sync-password", "", "", "sync password")
-	userCmd.PersistentFlags().IntVarP(&maxConnections, "max-connection ", "", 1000, "proxysql user max connection")
+	userCmd.PersistentFlags().IntVarP(&maxConnections, "max-connection", "", 1024, "proxysql user max connection")
 	userCmd.PersistentFlags().IntVarP(&defaultHostGroup, "default-hostgroup", "", 10, "proxysql user default hostgroup id")
 }
