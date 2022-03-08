@@ -14,3 +14,6 @@ unitctl 工具组用于在unit中访问kubernetes api
 
 ### 4.根据service group name标签获取本服务组mysql容器ip和port，并且连接到指定master mysql节点中 获取所有Host为本proxysql容器ip地址的用户 并写入proxysql本地admin interface中
 ```unitctl sync user ${svcgroupname} -n ${namespace} --admin-username admin --admin-password 123456 --admin-host 127.0.0.1 --admin-port 6032 --default-hostgroup 10 --max-connection 10000 --sync-username check --sync-password 123456```
+
+### 5.根据dbscale.proxysql.label在内存中修改mysql unit master/slave plugin 开关配置
+```unitctl set mysql ${pod_name} -n ${namespace} --secret ${secret_name}```
