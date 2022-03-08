@@ -14,9 +14,10 @@ const (
 )
 
 type UnitClient interface {
-	GetSecret(ctx context.Context, namespace string, secretName string) (SecretInfo, error)
+	GetSecret(ctx context.Context, namespace, secretName string) (SecretInfo, error)
 	GetConfigmap(ctx context.Context, namespace, configMapName string) (ConfigMapInfo, error)
 	GetMysqlSet(ctx context.Context, namespace, svcGroupName string) (MysqlSet, error)
+	GetPodLabelSet(ctx context.Context, namespace, podName string) (LabelSet, error)
 }
 
 type SecretInfo map[string][]byte
@@ -56,3 +57,9 @@ func NewMysql(ip string, port int) *Mysql {
 }
 
 type MysqlSet []*Mysql
+
+type LabelSet map[string]string
+
+func (l LabelSet) Marshal() ([]byte, error) {
+	return json.Marshal(l)
+}

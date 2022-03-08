@@ -22,4 +22,5 @@ func init() {
 	GetCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "default", "specify namespace")
 	GetCmd.AddCommand(secretCmd)
 	GetCmd.AddCommand(configMapCmd)
+	GetCmd.AddCommand(podCmd)
 }

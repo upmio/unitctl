@@ -8,6 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"strings"
 
 	"github.com/upmio/unitctl/apps/unit"
 )
@@ -90,4 +91,20 @@ func (i *impl) GetMysqlSet(ctx context.Context, namespace, svcGroupName string) 
 	}
 
 	return mysqlSet, nil
+}
+
+func (i *impl) GetPodLabelSet(ctx context.Context, namespace, podName string) (unit.LabelSet, error) {
+	podObj, err := i.kubeclientset.CoreV1().Pods(namespace).Get(ctx, podName, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	labelSet := make(unit.LabelSet, 0)
+	for key, value := range podObj.Labels {
+		if strings.HasPrefix(key, "dbscale") {
+			labelSet[key] = value
+		}
+	}
+
+	return labelSet, nil
 }

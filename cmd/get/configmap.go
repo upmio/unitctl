@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	fileDir, configMapName string
+	fileDir string
 )
 
 var configMapCmd = &cobra.Command{
