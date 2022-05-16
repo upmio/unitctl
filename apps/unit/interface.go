@@ -9,7 +9,7 @@ import (
 
 const (
 	ReadOnlyLabel     = "dbscale.proxysql.readonly"
-	SvcGroupNameLabel = "dbscale.service.group"
+	SvcGroupNameLabel = "dbscale.service-group"
 	SvcTypeLabel      = "dbscale.service.image.name"
 )
 
