@@ -62,7 +62,7 @@ var userCmd = &cobra.Command{
 		}
 
 		// 获取mysql 用户信息
-		hostIp := os.Getenv("INTERNAL_IP")
+		hostIp := os.Getenv("POD_IP")
 		userSet, err := mysqlClient.GetMysqlUser(hostIp)
 		if err != nil {
 			return err
